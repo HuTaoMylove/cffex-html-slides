@@ -18,7 +18,7 @@ Open the starter or a generated HTML file directly in a browser; no build step i
 
 `rtk proxy node ../scripts/validate-deck.mjs CFFEX-starter.html --allow-placeholders` checks template structure, registered layouts, and image references.
 
-`rtk proxy node ../scripts/review-deck.mjs output/clear-work/index.html /tmp/cffex-review` validates a finished deck and renders PNGs plus an overview. Omit placeholder allowances for finished decks.
+`rtk proxy node ../scripts/review-deck.mjs output/clear-work/index.html /tmp/cffex-review` validates a finished deck and renders numbered contact sheets, four slides per sheet by default. Use `--batch-size=2` for dense pages and `--overview` for an optional deck overview. Omit placeholder allowances for finished decks.
 
 ## Coding Style & Naming Conventions
 
@@ -28,7 +28,7 @@ Preserve the 1600 × 900 canvas, fixed brand geometry, and registered `data-layo
 
 ## Testing Guidelines
 
-Run structural validation after skill, script, or template changes. Review the overview and every full-size PNG at 1600 × 900. Check actual fonts, overflow, spacing, narrow-screen scaling, keyboard/touch navigation, page jumps, and fullscreen. Report unavailable browser checks explicitly. There is no coverage threshold or unit-test naming convention.
+Run structural validation after skill, script, or template changes. Render on the 1600 × 900 canvas and inspect every page through grouped contact sheets, normally four pages per sheet; use two for dense pages. Inspect individual pages or crops only when a sheet reveals a problem or lacks readable detail. Do not retain individual PNGs or open every page separately by default. After a fix, inspect affected groups again. Keep full-deck automatic checks and actual-font, overflow, spacing, narrow-screen, keyboard/touch, page-jump, and fullscreen checks. Report unavailable browser checks explicitly. There is no coverage threshold or unit-test naming convention.
 
 ## Commit & Pull Request Guidelines
 

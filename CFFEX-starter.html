@@ -556,24 +556,66 @@ select {
   }
 }
 
-/* data-reveal is opt-in on semantic groups; the final state is always visible. */
-@keyframes slide-enter {
-  from { opacity: 0; transform: translateX(var(--enter-x, 0px)); }
-  to { opacity: 1; transform: none; }
+/* Only content stages move; fixed brand geometry stays in place. */
+@keyframes page-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes stage-push {
+  from { transform: translateX(var(--enter-x, 52px)); }
+  to { transform: none; }
+}
+@keyframes stage-lift {
+  from { transform: translateY(var(--enter-y, 28px)); }
+  to { transform: none; }
+}
+@keyframes stage-focus {
+  from { transform: scale(.97); }
+  to { transform: none; }
+}
+@keyframes stage-wipe {
+  from { clip-path: inset(0 var(--wipe-right, 100%) 0 var(--wipe-left, 0%)); }
+  to { clip-path: inset(0 0 0 0); }
 }
 @keyframes group-enter {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: none; }
 }
-.slide.is-entering { animation: slide-enter 320ms ease-out both; }
+@keyframes line-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+.slide.is-entering { animation: page-fade 300ms ease-out both; }
+.slide.is-entering .motion-stage {
+  animation-duration: 420ms;
+  animation-timing-function: cubic-bezier(.22, .7, .3, 1);
+  animation-fill-mode: both;
+  transform-origin: center;
+}
+.slide.is-entering[data-motion="push"] .motion-stage { animation-name: stage-push; }
+.slide.is-entering[data-motion="lift"] .motion-stage { animation-name: stage-lift; }
+.slide.is-entering[data-motion="focus"] .motion-stage { animation-name: stage-focus; }
+.slide.is-entering[data-motion="wipe"] .motion-stage {
+  animation-name: stage-wipe;
+  animation-duration: 460ms;
+}
+/* Opt-in semantic groups; the unanimated state always shows complete content. */
 .slide.is-entering [data-reveal] {
-  animation: group-enter 280ms ease-out both;
+  animation: group-enter 360ms ease-out both;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+.slide.is-entering [data-reveal="fade"] { animation-name: page-fade; }
+.slide.is-entering [data-reveal="draw"] {
+  stroke-dasharray: 1;
+  animation: line-draw 460ms ease-out both;
   animation-delay: var(--reveal-delay, 0ms);
 }
 @media (prefers-reduced-motion: reduce) {
-  .slide.is-entering, .slide.is-entering [data-reveal] { animation: none; }
+  .slide.is-entering, .slide.is-entering .motion-stage,
+  .slide.is-entering [data-reveal] { animation: none !important; stroke-dasharray: none; }
 }
-html[data-static] .slide, html[data-static] [data-reveal] { animation: none !important; }
+html[data-static] .slide, html[data-static] .motion-stage,
+html[data-static] [data-reveal] { animation: none !important; stroke-dasharray: none; }
 button:focus-visible, select:focus-visible { outline: 2px solid var(--blue-main); outline-offset: 3px; }
 .deck-controls { max-width: calc(100vw - 16px); }
 .slide-dots { max-width: 25vw; overflow-x: auto; }
@@ -585,7 +627,7 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--blue-main)
 .detail-dialog h2 { margin: 0 48px 20px 0; color: var(--blue-deep); font-size: 24px; }
 .detail-dialog [data-close-detail] { float: right; background: transparent; border: 0; color: var(--blue-deep); font-size: 24px; cursor: pointer; }
 @media print {
-  .slide.is-entering, [data-reveal] { animation: none !important; }
+  .slide.is-entering, .motion-stage, [data-reveal] { animation: none !important; stroke-dasharray: none; }
   .detail-dialog { display: none !important; }
 }
 </style>
@@ -699,8 +741,11 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--blue-main)
       const interactive = (target) => target instanceof Element &&
         target.closest('button,a,input,textarea,select,[contenteditable]:not([contenteditable="false"]),[role="button"],dialog');
       const selectedText = () => Boolean(window.getSelection()?.toString());
+      const transitions = new Set(['fade', 'push', 'lift', 'focus', 'wipe']);
       slides.forEach((slide, index) => {
         slide.tabIndex = -1;
+        slide.querySelectorAll('.template-body, .cover-copy, .directory-list, .thanks-title')
+          .forEach(stage => stage.classList.add('motion-stage'));
         const dot = document.createElement('button');
         dot.type = 'button';
         dot.dataset.slide = index;
@@ -720,18 +765,28 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--blue-main)
         clearTimeout(entranceTimer);
         slides.forEach((slide, i) => {
           slide.classList.remove('is-entering');
+          delete slide.dataset.motion;
           slide.classList.toggle('active', i === active);
           slide.setAttribute('aria-hidden', String(i !== active));
           slide.inert = i !== active;
         });
         const current = slides[active];
         if (animate && last >= 0 && !reduced.matches && !document.documentElement.hasAttribute('data-static')) {
-          current.style.setProperty('--enter-x', Math.abs(active - last) === 1 ? (active > last ? '18px' : '-18px') : '0px');
+          const forward = active > last;
+          current.dataset.motion = transitions.has(current.dataset.transition) ? current.dataset.transition :
+            (Math.abs(active - last) === 1 ? 'push' : 'fade');
+          current.style.setProperty('--enter-x', forward ? '52px' : '-52px');
+          current.style.setProperty('--enter-y', forward ? '28px' : '-28px');
+          current.style.setProperty('--wipe-right', forward ? '100%' : '0%');
+          current.style.setProperty('--wipe-left', forward ? '0%' : '100%');
           current.querySelectorAll('[data-reveal]').forEach((group, i) =>
-            group.style.setProperty('--reveal-delay', Math.min(i * 100, 600) + 'ms'));
+            group.style.setProperty('--reveal-delay', Math.min(i * 70, 350) + 'ms'));
           void current.offsetWidth;
           current.classList.add('is-entering');
-          entranceTimer = setTimeout(() => current.classList.remove('is-entering'), 950);
+          entranceTimer = setTimeout(() => {
+            current.classList.remove('is-entering');
+            delete current.dataset.motion;
+          }, 850);
         }
         dots.forEach((dot, i) => {
           dot.classList.toggle('current', i === active);
@@ -840,7 +895,13 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--blue-main)
       }, { passive: true });
       window.addEventListener('touchcancel', () => { touch = null; }, { passive: true });
       reduced.addEventListener('change', () => {
-        if (reduced.matches) slides.forEach(slide => slide.classList.remove('is-entering'));
+        if (reduced.matches) {
+          clearTimeout(entranceTimer);
+          slides.forEach(slide => {
+            slide.classList.remove('is-entering');
+            delete slide.dataset.motion;
+          });
+        }
       });
       const requestedSlide = Number(params.get('slide'));
       goTo(Number.isFinite(requestedSlide) && requestedSlide > 0 ? requestedSlide - 1 : 0, false);
