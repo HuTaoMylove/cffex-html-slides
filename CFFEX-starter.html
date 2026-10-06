@@ -1,0 +1,850 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="中国金融期货交易所 HTML 演示模板：固定品牌页、自由内容区与通用演示交互。">
+  <title>CFFEX HTML PPT 模板</title>
+  <style>
+
+:root {
+  /* 固定母版品牌色：仅用于封面、页眉标识等品牌组件。 */
+  --cffex-blue: #0861b9;
+  --cffex-blue-dark: #0057ad;
+
+  /* 内容页统一色板：禁止为单页新增近似色或临时色。 */
+  --blue-deep: #2c4a7c;
+  --blue-main: #4a72a8;
+  --blue-light: #7a9ec4;
+  --blue-pale: #b8cde0;
+  --gold-light: #e3c48d;
+  --gold-wash: #f5e9d7;
+  --line-pale: #d8e2ec;
+  --paper: #ffffff;
+  --ink: #1a1a2e;
+  --ink-body: #2c2f33;
+  --muted: #72767c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  overflow: hidden;
+  background: #e9edf1;
+  color: var(--ink);
+  font-family: "KaiTi", "STKaiti", "Microsoft YaHei", serif;
+  font-weight: 700;
+}
+
+.en,
+.en * {
+  font-family: "Times New Roman", Times, serif !important;
+  letter-spacing: 0 !important;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+.presentation-shell {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+
+.deck {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1600px;
+  height: 900px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 1.5rem 4.5rem rgb(35 48 61 / 16%);
+  container-type: inline-size;
+  transform-origin: 0 0;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 1600px;
+  height: 900px;
+  overflow: hidden;
+  background: var(--paper);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: none;
+}
+
+.slide.active {
+  z-index: 1;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.cover-art {
+  position: absolute;
+  inset: -0.45%;
+  width: 100.9%;
+  height: 100.9%;
+  max-width: none;
+  object-fit: fill;
+  clip-path: polygon(51.7% 0, 100% 0, 100% 100%, 69.4% 100%, 85% 69%);
+  user-select: none;
+}
+
+.cover-logo {
+  position: absolute;
+  top: 4.8%;
+  left: 2.75%;
+  width: 23.4%;
+  height: auto;
+  user-select: none;
+}
+
+.cover-copy {
+  position: absolute;
+  top: 33.6%;
+  left: 5.05%;
+  width: 48%;
+}
+
+.cover-title {
+  margin: 0;
+  color: var(--cffex-blue-dark);
+  font-family: "SimHei", "Microsoft YaHei", sans-serif;
+  font-size: 4.05cqw;
+  font-weight: 900;
+  letter-spacing: -0.075em;
+  line-height: 1.14;
+}
+
+.cover-title .en { font-weight: 900; }
+
+.cover-subtitle {
+  width: 96%;
+  margin: 2.9cqw 0 0;
+  color: var(--cffex-blue-dark);
+  font-family: "SimHei", "Microsoft YaHei", sans-serif;
+  font-size: 2.5cqw;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+}
+
+.cover-meta {
+  display: flex;
+  margin-top: 11.7cqw;
+  align-items: center;
+  gap: 2.25cqw;
+  color: #161616;
+  font-family: "KaiTi", "STKaiti", "Microsoft YaHei", sans-serif;
+  font-size: 1.78cqw;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.cover-meta i {
+  width: 0.13cqw;
+  height: 1.8cqw;
+  background: var(--cffex-blue);
+}
+
+.content-slide {
+  border: 1px solid #d4d4d4;
+}
+
+.content-header {
+  position: absolute;
+  top: 5.05%;
+  left: 4.15%;
+  display: flex;
+  align-items: center;
+  gap: 1.85cqw;
+  width: 70%;
+}
+
+.content-header h2 {
+  margin: 0;
+  color: #080808;
+  font-family: "SimHei", "Microsoft YaHei", sans-serif;
+  font-size: 2.55cqw;
+  font-weight: 900;
+  letter-spacing: -0.08em;
+  line-height: 1.06;
+  white-space: nowrap;
+}
+
+.content-header h2.compact { font-size: 2.36cqw; }
+.content-header h2.tight { font-size: 2.18cqw; }
+.content-header h2 .en { font-weight: 900; }
+
+.title-mark {
+  position: relative;
+  display: block;
+  width: 1.85cqw;
+  height: 2.62cqw;
+  background: linear-gradient(
+    90deg,
+    var(--cffex-blue) 0 33.333%,
+    var(--blue-main) 33.333% 66.666%,
+    var(--blue-pale) 66.666% 100%
+  );
+}
+
+.title-mark i { display: none; }
+
+.content-logo {
+  position: absolute;
+  top: 3.2%;
+  right: 2.15%;
+  width: 23.5%;
+  height: auto;
+  user-select: none;
+}
+
+.directory-slide {
+  background: #f3f4f5;
+}
+
+.directory-art {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: auto;
+  height: 100%;
+  user-select: none;
+}
+
+.directory-panel {
+  position: absolute;
+  inset: 7.55% 3.8% 7.45%;
+  display: grid;
+  grid-template-columns: 42.5% 0.13cqw minmax(0, 1fr);
+  align-items: center;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 0.55cqw 2.6cqw rgb(35 48 61 / 15%);
+}
+
+.directory-heading {
+  margin: 0;
+  color: #005bb8;
+  font-family: "SimHei", "Microsoft YaHei", sans-serif;
+  font-size: 5.35cqw;
+  font-weight: 900;
+  letter-spacing: -0.08em;
+  line-height: 1;
+  justify-self: center;
+}
+
+.directory-divider {
+  width: 0.13cqw;
+  height: 62.35%;
+  background: #0064c8;
+  justify-self: center;
+}
+
+.directory-list {
+  width: calc(100% - 12cqw);
+  margin: 0 0 0 12cqw;
+  padding: 0;
+  list-style: none;
+  transform: translateY(2.1cqw);
+}
+
+.directory-list li {
+  display: flex;
+  align-items: baseline;
+  min-height: 7.25cqw;
+  color: #8d8d8d;
+  font-family: "SimHei", "Microsoft YaHei", sans-serif;
+  font-size: 2.28cqw;
+  font-weight: 900;
+  letter-spacing: -0.055em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.directory-list li:first-child {
+  color: #005bb8;
+}
+
+.directory-index {
+  min-width: 4.2cqw;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 2.45cqw;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.directory-item-title {
+  font: inherit;
+}
+
+.thanks-title {
+  position: absolute;
+  top: 46.6%;
+  left: 23.55%;
+  width: 30%;
+}
+
+.thanks-slide .cover-logo {
+  top: 5.15%;
+  left: 2.65%;
+  width: 25.6%;
+}
+
+.content-footer {
+  position: absolute;
+  bottom: 4.55%;
+  left: 4.25%;
+  margin: 0;
+  color: #808080;
+  font-family: "SimHei", "Microsoft YaHei", sans-serif;
+  font-size: 1.2cqw;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.guide {
+  position: absolute;
+  z-index: 2;
+  display: none;
+  pointer-events: none;
+}
+
+.guides-visible .guide {
+  display: block;
+}
+
+.guide-x {
+  top: 37.6%;
+  left: 0;
+  width: 100%;
+  border-top: 1px dashed rgb(62 72 82 / 58%);
+}
+
+.guide-y {
+  top: 0;
+  left: 37.4%;
+  height: 100%;
+  border-left: 1px dashed rgb(62 72 82 / 58%);
+}
+
+/* ---------- 自由内容区：1400 × 600 可用范围，内部构图不预设 ---------- */
+.template-body {
+  position: absolute;
+  top: 10cqw;
+  right: 6.25cqw;
+  bottom: 8.75cqw;
+  left: 6.25cqw;
+  color: var(--ink);
+}
+
+.template-body.layout-centered {
+  top: var(--layout-stage-top, 10cqw);
+  bottom: auto;
+  display: grid;
+  height: var(--layout-stage-height, 37.5cqw);
+  place-items: center;
+}
+
+.layout-composition {
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  max-width: 87.5cqw;
+  max-height: 37.5cqw;
+}
+.template-body {
+  font-family: "Times New Roman", Times, "KaiTi", "STKaiti", "Microsoft YaHei", serif;
+  font-size: 1.375cqw;
+  line-height: 1.5;
+}
+.template-body h3, .template-body h4 {
+  font-family: "Times New Roman", Times, "SimHei", "Microsoft YaHei", sans-serif;
+  font-size: 1.875cqw;
+}
+
+.template-body h3,
+.template-body h4,
+.template-body p {
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide { transition: none; }
+}
+
+.deck-controls {
+  position: fixed;
+  bottom: 2.4vh;
+  left: 50%;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 0.38rem;
+  padding: 0.38rem;
+  border: 1px solid rgb(44 74 124 / 13%);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 92%);
+  box-shadow: 0 0.55rem 1.8rem rgb(35 48 61 / 12%);
+  transform: translateX(-50%);
+  backdrop-filter: blur(12px);
+}
+
+.deck-controls button {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #315375;
+  cursor: pointer;
+  place-items: center;
+  transition:
+    background 120ms ease,
+    color 120ms ease,
+    opacity 120ms ease;
+}
+
+.deck-controls > button > span:first-child {
+  font-family: Arial, sans-serif;
+  font-size: 1.65rem;
+  font-weight: 400;
+  line-height: 0.8;
+}
+
+.deck-controls button:hover:not(:disabled),
+.deck-controls button:focus-visible,
+.deck-controls button.is-on {
+  outline: none;
+  background: #e7eef6;
+  color: #0a5ead;
+}
+
+.deck-controls button:disabled {
+  cursor: default;
+  opacity: 0.25;
+}
+
+.slide-dots {
+  display: flex;
+  align-items: center;
+  gap: 0.43rem;
+  padding: 0 0.55rem;
+}
+
+.slide-dots button {
+  width: 0.42rem;
+  height: 0.42rem;
+  min-width: 0.42rem;
+  border: 0;
+  background: #bdc8d2;
+}
+
+.slide-dots button.current {
+  width: 1.25rem;
+  background: var(--blue-main);
+}
+
+.control-separator {
+  width: 1px;
+  height: 1.25rem;
+  margin: 0 0.16rem;
+  background: #d7dde3;
+}
+
+.grid-icon,
+.fullscreen-icon {
+  position: relative;
+  display: block;
+  width: 0.94rem;
+  height: 0.94rem;
+}
+
+.grid-icon {
+  border: 1.5px solid currentColor;
+  background:
+    linear-gradient(90deg, transparent 46%, currentColor 46% 54%, transparent 54%),
+    linear-gradient(transparent 46%, currentColor 46% 54%, transparent 54%);
+  opacity: 0.9;
+}
+
+.fullscreen-icon {
+  background:
+    linear-gradient(currentColor, currentColor) 0 0 / 0.42rem 1.5px no-repeat,
+    linear-gradient(currentColor, currentColor) 0 0 / 1.5px 0.42rem no-repeat,
+    linear-gradient(currentColor, currentColor) 100% 0 / 0.42rem 1.5px no-repeat,
+    linear-gradient(currentColor, currentColor) 100% 0 / 1.5px 0.42rem no-repeat,
+    linear-gradient(currentColor, currentColor) 0 100% / 0.42rem 1.5px no-repeat,
+    linear-gradient(currentColor, currentColor) 0 100% / 1.5px 0.42rem no-repeat,
+    linear-gradient(currentColor, currentColor) 100% 100% / 0.42rem 1.5px no-repeat,
+    linear-gradient(currentColor, currentColor) 100% 100% / 1.5px 0.42rem no-repeat;
+}
+
+@page {
+  size: 16in 9in;
+  margin: 0;
+}
+
+@media print {
+  body {
+    width: 1600px;
+    height: auto;
+    overflow: visible;
+    background: #fff;
+  }
+
+  .slide,
+  .slide * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .presentation-shell {
+    position: static;
+    display: block;
+    width: 1600px;
+    height: auto;
+    overflow: visible;
+  }
+
+  .deck {
+    position: static;
+    width: 1600px;
+    height: auto;
+    box-shadow: none;
+    overflow: visible;
+    transform: none !important;
+  }
+
+  .slide {
+    position: relative;
+    display: block;
+    width: 1600px;
+    height: 900px;
+    break-after: page;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
+  }
+
+  .deck-controls {
+    display: none;
+  }
+}
+
+/* data-reveal is opt-in on semantic groups; the final state is always visible. */
+@keyframes slide-enter {
+  from { opacity: 0; transform: translateX(var(--enter-x, 0px)); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes group-enter {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+.slide.is-entering { animation: slide-enter 320ms ease-out both; }
+.slide.is-entering [data-reveal] {
+  animation: group-enter 280ms ease-out both;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .slide.is-entering, .slide.is-entering [data-reveal] { animation: none; }
+}
+html[data-static] .slide, html[data-static] [data-reveal] { animation: none !important; }
+button:focus-visible, select:focus-visible { outline: 2px solid var(--blue-main); outline-offset: 3px; }
+.deck-controls { max-width: calc(100vw - 16px); }
+.slide-dots { max-width: 25vw; overflow-x: auto; }
+.deck-position { display: flex; align-items: center; gap: .25rem; font: 14px "Times New Roman", serif; white-space: nowrap; }
+.deck-position select { max-width: 4.5rem; border: 0; background: transparent; color: var(--blue-deep); }
+.detail-trigger { background: transparent; color: var(--blue-deep); border: 1px solid var(--line-pale); border-radius: 4px; padding: .3em .65em; cursor: pointer; }
+.detail-dialog { width: min(760px, calc(100vw - 32px)); max-height: 80vh; overflow-y: auto; padding: 28px; border: 1px solid var(--line-pale); color: var(--ink-body); background: var(--paper); font-weight: 400; }
+.detail-dialog::backdrop { background: rgb(20 35 55 / 35%); }
+.detail-dialog h2 { margin: 0 48px 20px 0; color: var(--blue-deep); font-size: 24px; }
+.detail-dialog [data-close-detail] { float: right; background: transparent; border: 0; color: var(--blue-deep); font-size: 24px; cursor: pointer; }
+@media print {
+  .slide.is-entering, [data-reveal] { animation: none !important; }
+  .detail-dialog { display: none !important; }
+}
+</style>
+</head>
+<body>
+  <!-- 可修改文字：封面信息、目录项目、内容页标题与示例占位内容；母版结构与结束页保持固定。 -->
+  <main class="presentation-shell" aria-label="固定母版 HTML PPT">
+    <div class="deck" aria-live="polite">
+      <section class="slide cover-slide active" aria-label="封面" aria-hidden="false" data-layout="cffex-cover">
+        <img class="cover-art" src="assets/brand/cover-background.png" alt="" draggable="false">
+        <img class="cover-logo" src="assets/brand/cffex-logo.png" alt="中国金融期货交易所 China Financial Futures Exchange" draggable="false">
+        <div class="cover-copy">
+        <h1 class="cover-title" data-template-slot="cover-title">演示文稿标题</h1>
+        <p class="cover-subtitle" data-template-slot="cover-subtitle">副标题</p>
+        <div class="cover-meta" aria-label="封面信息">
+          <span data-template-slot="department">部门：信息科技部</span><i aria-hidden="true"></i>
+          <span data-template-slot="speaker">姓名</span><i aria-hidden="true"></i>
+          <span data-template-slot="date">时间：年/月</span>
+        </div>
+        </div>
+      </section>
+
+      <section class="slide directory-slide" aria-label="目录页" aria-hidden="true" data-layout="cffex-agenda">
+        <img class="directory-art" src="assets/brand/agenda-background.png" alt="蓝色建筑背景装饰" draggable="false">
+        <div class="directory-panel">
+          <h2 class="directory-heading">目录</h2>
+          <span class="directory-divider" aria-hidden="true"></span>
+          <ol class="directory-list" aria-label="目录项目">
+            <li><span class="directory-index">01</span><span class="directory-item-title" data-template-slot="toc-title-1">基础版式</span></li>
+            <li><span class="directory-index">02</span><span class="directory-item-title" data-template-slot="toc-title-2">流程与关系</span></li>
+            <li><span class="directory-index">03</span><span class="directory-item-title" data-template-slot="toc-title-3">时间与演进</span></li>
+            <li><span class="directory-index">04</span><span class="directory-item-title" data-template-slot="toc-title-4">数据与表格</span></li>
+            <li><span class="directory-index">05</span><span class="directory-item-title" data-template-slot="toc-title-5">图文与案例</span></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="slide content-slide" aria-label="空白内容页" aria-hidden="true" data-layout="cffex-content-blank">
+        <header class="content-header">
+          <span class="title-mark" aria-hidden="true"><i></i><i></i></span>
+          <h2 data-template-slot="page-title">页面标题</h2>
+        </header>
+        <img class="content-logo" src="assets/brand/cffex-logo.png" alt="中国金融期货交易所 China Financial Futures Exchange" draggable="false">
+        <p class="content-footer">中国金融期货交易所</p>
+        <div class="template-body layout-centered"><div class="layout-composition"></div></div>
+        <span class="guide guide-x" aria-hidden="true"></span>
+        <span class="guide guide-y" aria-hidden="true"></span>
+      </section>
+
+      <section class="slide thanks-slide" aria-label="结束页" aria-hidden="true" data-layout="cffex-closing"></section>
+    </div>
+
+    <nav class="deck-controls" aria-label="演示控制">
+      <button type="button" data-action="previous" disabled aria-label="上一页"><span aria-hidden="true">‹</span></button>
+      <div class="slide-dots" aria-label="幻灯片页码"></div>
+      <label class="deck-position"><select data-action="jump" aria-label="跳转页码"></select><span data-page-count></span></label>
+      <button type="button" data-action="next" aria-label="下一页"><span aria-hidden="true">›</span></button>
+      <span class="control-separator" aria-hidden="true"></span>
+      <button type="button" data-action="guides" aria-label="显示或隐藏内容页参考线" title="参考线（G）"><span class="grid-icon" aria-hidden="true"></span></button>
+      <button type="button" data-action="fullscreen" aria-label="全屏放映" title="全屏（F）"><span class="fullscreen-icon" aria-hidden="true"></span></button>
+    </nav>
+  </main>
+  <script>
+    (() => {
+      const deck = document.querySelector('.deck');
+      const scaleDeck = () => {
+        if (!deck) return;
+        const scale = Math.min(window.innerWidth / 1600, window.innerHeight / 900);
+        const x = (window.innerWidth - 1600 * scale) / 2;
+        const y = (window.innerHeight - 900 * scale) / 2;
+        deck.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+      };
+      scaleDeck();
+      window.addEventListener('resize', scaleDeck);
+
+      const cover = document.querySelector('.cover-slide');
+      const thanks = document.querySelector('.thanks-slide');
+      if (cover && thanks) {
+        thanks.replaceChildren();
+        thanks.classList.add('cover-slide');
+        thanks.setAttribute('aria-label', '谢谢观看');
+
+        const coverArt = cover.querySelector('.cover-art')?.cloneNode(true);
+        const coverLogo = cover.querySelector('.cover-logo')?.cloneNode(true);
+        const thanksTitle = document.createElement('h1');
+        thanksTitle.className = 'cover-title thanks-title';
+        thanksTitle.textContent = '谢谢观看';
+
+        if (coverArt) thanks.appendChild(coverArt);
+        if (coverLogo) thanks.appendChild(coverLogo);
+        thanks.appendChild(thanksTitle);
+      }
+
+
+      const slides = [...document.querySelectorAll('.slide')];
+      const previous = document.querySelector('[data-action="previous"]');
+      const next = document.querySelector('[data-action="next"]');
+      const guides = document.querySelector('[data-action="guides"]');
+      const fullscreen = document.querySelector('[data-action="fullscreen"]');
+      const jump = document.querySelector('[data-action="jump"]');
+      const dotGroup = document.querySelector('.slide-dots');
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+      const params = new URLSearchParams(location.search);
+      if (params.has('static')) document.documentElement.dataset.static = '';
+      const shell = document.querySelector('.presentation-shell');
+      let active = -1;
+      let entranceTimer;
+      let touch = null;
+      let opened = null;
+      let returnFocus = null;
+      const interactive = (target) => target instanceof Element &&
+        target.closest('button,a,input,textarea,select,[contenteditable]:not([contenteditable="false"]),[role="button"],dialog');
+      const selectedText = () => Boolean(window.getSelection()?.toString());
+      slides.forEach((slide, index) => {
+        slide.tabIndex = -1;
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.dataset.slide = index;
+        dot.setAttribute('aria-label', '跳转到第 ' + (index + 1) + ' 页：' + (slide.getAttribute('aria-label') || '内容页'));
+        dotGroup.append(dot);
+        jump.add(new Option(String(index + 1), String(index)));
+      });
+      document.querySelector('[data-page-count]').textContent = '/ ' + slides.length;
+      const dots = [...dotGroup.children];
+      const goTo = (index, animate = true) => {
+        if (opened) return;
+        const target = Math.max(0, Math.min(slides.length - 1, index));
+        if (target === active) return;
+        const last = active;
+        const focusWasInSlide = slides[last]?.contains(document.activeElement);
+        active = target;
+        clearTimeout(entranceTimer);
+        slides.forEach((slide, i) => {
+          slide.classList.remove('is-entering');
+          slide.classList.toggle('active', i === active);
+          slide.setAttribute('aria-hidden', String(i !== active));
+          slide.inert = i !== active;
+        });
+        const current = slides[active];
+        if (animate && last >= 0 && !reduced.matches && !document.documentElement.hasAttribute('data-static')) {
+          current.style.setProperty('--enter-x', Math.abs(active - last) === 1 ? (active > last ? '18px' : '-18px') : '0px');
+          current.querySelectorAll('[data-reveal]').forEach((group, i) =>
+            group.style.setProperty('--reveal-delay', Math.min(i * 100, 600) + 'ms'));
+          void current.offsetWidth;
+          current.classList.add('is-entering');
+          entranceTimer = setTimeout(() => current.classList.remove('is-entering'), 950);
+        }
+        dots.forEach((dot, i) => {
+          dot.classList.toggle('current', i === active);
+          if (i === active) dot.setAttribute('aria-current', 'page');
+          else dot.removeAttribute('aria-current');
+        });
+        previous.disabled = active === 0;
+        next.disabled = active === slides.length - 1;
+        jump.value = String(active);
+        dotGroup.setAttribute('aria-label', '第 ' + (active + 1) + ' 页，共 ' + slides.length + ' 页');
+        if (focusWasInSlide) current.focus({ preventScroll: true });
+      };
+      const toggleGuides = () => {
+        const visible = !guides.classList.contains('is-on');
+        document.querySelectorAll('.content-slide').forEach(slide => slide.classList.toggle('guides-visible', visible));
+        guides.classList.toggle('is-on', visible);
+        guides.setAttribute('aria-pressed', String(visible));
+      };
+      previous.addEventListener('click', () => goTo(active - 1));
+      next.addEventListener('click', () => goTo(active + 1));
+      dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
+      jump.addEventListener('change', () => goTo(Number(jump.value)));
+      guides.addEventListener('click', toggleGuides);
+      fullscreen.addEventListener('click', async () => {
+        try {
+          if (document.fullscreenElement) await document.exitFullscreen();
+          else if (document.documentElement.requestFullscreen) await document.documentElement.requestFullscreen();
+        } catch {
+          fullscreen.title = '当前环境不支持全屏，可继续正常浏览';
+        }
+      });
+      document.addEventListener('fullscreenchange', () =>
+        fullscreen.setAttribute('aria-pressed', String(Boolean(document.fullscreenElement))));
+
+      // Optional details: trigger data-detail="id"; matching <dialog id="id"> outside .deck.
+      const focusable = dialog => [...dialog.querySelectorAll('button,a[href],input,select,textarea,[tabindex]')]
+        .filter(el => !el.disabled && el.tabIndex >= 0 && !el.closest('[inert]') &&
+          el.getClientRects().length && getComputedStyle(el).visibility !== 'hidden');
+      const closeDetail = () => { if (opened) opened.close(); };
+      document.querySelectorAll('dialog.detail-dialog').forEach(dialog => {
+        dialog.addEventListener('cancel', event => { event.preventDefault(); closeDetail(); });
+        dialog.addEventListener('close', () => {
+          if (opened !== dialog) return;
+          opened = null;
+          shell.inert = false;
+          returnFocus?.focus({ preventScroll: true });
+          returnFocus = null;
+        });
+        dialog.addEventListener('click', event => {
+          const rect = dialog.getBoundingClientRect();
+          if (event.target === dialog && (event.clientX < rect.left || event.clientX > rect.right ||
+              event.clientY < rect.top || event.clientY > rect.bottom)) closeDetail();
+        });
+      });
+      document.addEventListener('click', event => {
+        const trigger = event.target.closest('[data-detail]');
+        if (trigger && !opened) {
+          const dialog = document.getElementById(trigger.dataset.detail);
+          if (!(dialog instanceof HTMLDialogElement) || !dialog.classList.contains('detail-dialog')) return;
+          returnFocus = trigger;
+          opened = dialog;
+          dialog.showModal();
+          shell.inert = true;
+          dialog.tabIndex = -1;
+          (focusable(dialog)[0] || dialog).focus();
+        } else if (event.target.closest('[data-close-detail]')) closeDetail();
+      });
+      window.addEventListener('keydown', event => {
+        if (opened) {
+          if (event.key === 'Escape') { event.preventDefault(); closeDetail(); }
+          if (event.key === 'Tab') {
+            const elements = focusable(opened);
+            const first = elements[0] || opened;
+            const last = elements.at(-1) || opened;
+            if (!elements.length || !elements.includes(document.activeElement) ||
+                (event.shiftKey && document.activeElement === first) ||
+                (!event.shiftKey && document.activeElement === last)) {
+              event.preventDefault();
+              (event.shiftKey ? last : first).focus();
+            }
+          }
+          return;
+        }
+        if (event.defaultPrevented || event.isComposing || event.ctrlKey || event.metaKey || event.altKey ||
+            interactive(event.target) || selectedText()) return;
+        const destinations = { ArrowRight: active + 1, PageDown: active + 1, ' ': active + 1,
+          ArrowLeft: active - 1, PageUp: active - 1, Home: 0, End: slides.length - 1 };
+        if (event.key in destinations) { event.preventDefault(); goTo(destinations[event.key]); }
+        else if (event.key.toLowerCase() === 'g') toggleGuides();
+        else if (event.key.toLowerCase() === 'f') fullscreen.click();
+      });
+      window.addEventListener('touchstart', event => {
+        touch = null;
+        if (opened || interactive(event.target) || selectedText() || event.touches.length !== 1) return;
+        const point = event.touches[0];
+        touch = { x: point.clientX, y: point.clientY };
+      }, { passive: true });
+      window.addEventListener('touchend', event => {
+        const start = touch;
+        touch = null;
+        if (!start || opened || interactive(event.target) || selectedText() || event.touches.length) return;
+        const point = event.changedTouches[0];
+        const dx = point.clientX - start.x;
+        const dy = point.clientY - start.y;
+        if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.5) goTo(active + (dx < 0 ? 1 : -1));
+      }, { passive: true });
+      window.addEventListener('touchcancel', () => { touch = null; }, { passive: true });
+      reduced.addEventListener('change', () => {
+        if (reduced.matches) slides.forEach(slide => slide.classList.remove('is-entering'));
+      });
+      const requestedSlide = Number(params.get('slide'));
+      goTo(Number.isFinite(requestedSlide) && requestedSlide > 0 ? requestedSlide - 1 : 0, false);
+    })();
+  </script>
+</body>
+</html>
