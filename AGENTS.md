@@ -26,6 +26,12 @@ Follow existing indentation: two spaces in CSS and nested JavaScript blocks; mat
 
 Preserve the 1600 × 900 canvas, fixed brand geometry, and registered `data-layout` values. Content pages retain `.template-body.layout-centered` with a direct `.layout-composition` child. Keep template dimensions and `SKILL.md` guidance consistent; allow content-driven composition within those boundaries.
 
+## Confirmed Visual Direction
+
+This project serves a central state-owned enterprise presentation context. Use a composed, substantial visual style. Carry forward the confirmed preferences in [央企演示的视觉分量](references/visual-composition.md#央企演示的视觉分量), especially plain or light central labels and clearly weighted blue connectors. Blue remains dominant; use brand gold sparingly on a few key phrases or local structural details. Treat these as the default for subsequent design work in this repository.
+
+For scene and case-study pages, carry forward [已确认案例的构图经验](references/visual-composition.md#已确认案例的构图经验), drawn from the approved Feishu deck's original pages 4–7 (now pages 5 and 8–10). Use their content relationships and visual finish as a reference; choose compositions to suit each new case.
+
 ## Testing Guidelines
 
 Run structural validation after skill, script, or template changes. Render on the 1600 × 900 canvas and inspect every page through grouped contact sheets, normally four pages per sheet; use two for dense pages. Inspect individual pages or crops only when a sheet reveals a problem or lacks readable detail. Do not retain individual PNGs or open every page separately by default. After a fix, inspect affected groups again. Keep full-deck automatic checks and actual-font, overflow, spacing, narrow-screen, keyboard/touch, page-jump, and fullscreen checks. Report unavailable browser checks explicitly. There is no coverage threshold or unit-test naming convention.
